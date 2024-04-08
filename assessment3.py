@@ -20,4 +20,16 @@ def evaluate(root):
    else:
       return root.val
 
+def insert(root, val):
+   if root is None:
+      return Node(val)
+   else:
+      if root.val == val:
+         return root
+      elif root.val < val:
+         root.right = insert(root.right, val)
+      else:
+         root.left = insert(root.left, val)
+   return root
+
 print(evaluate(tree))
