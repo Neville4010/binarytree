@@ -2,6 +2,7 @@
 
 mathEquation = input("please input your maths equation in the format of (X?Y) and this will convert it to a binary tree :): ")
 mathEquation = mathEquation.replace(' ', '')
+postFix = ' '
 
 def prec(equation):
   if equation == '^':
@@ -21,6 +22,7 @@ def associativity(equation):
 def infixOrPostfix(equation):
   result = []
   stack = []
+  nodeValues = [result]
 
   for i in range(len(mathEquation)):
     equation = mathEquation[i]
@@ -37,10 +39,12 @@ def infixOrPostfix(equation):
       while stack and (prec(mathEquation[i]) < prec(stack[-1]) or (prec(mathEquation[i]) == prec(stack[-1]) and associativity(mathEquation[i]) == 'Left')):
         result.append(stack.pop())
       stack.append(equation)
-
+  
   while stack:
     result.append(stack.pop())
-
+  
+  print(nodeValues)
   print(''.join(result))
+ 
 
 infixOrPostfix(mathEquation)
