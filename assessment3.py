@@ -11,6 +11,31 @@ class Node:
     self.left = left
     self.right = right
     self.next = next
+  
+def postFixEquationResult(nodeValues):
+  operandStack = []
+  componentList = nodeValues.split()
+
+  for component in componentList:
+    if component in "0123456789":
+      operandStack.append(int(component))
+    else:
+      secondOperand = operandStack.pop()
+      firstOperand = operandStack.pop()
+      finalAnswer = Calculate(component, firstOperand, secondOperand)
+      operandStack.append(finalAnswer)
+  return operandStack.pop()
+
+def Calculate(operand, leftValue, rightValue):
+  if operand == '+':
+    return leftValue + rightValue
+  elif operand == '-':
+    return leftValue - rightValue
+  elif operand == '*':
+    return leftValue * rightValue
+  elif operand == '/':
+    return leftValue / rightValue
+
 
 def prec(equation):
   if equation == '^':
@@ -55,7 +80,7 @@ def infixOrPostfix(equation):
   print(''.join(result))
 
   for i in result:
-    nodeValues += i +""
+    nodeValues += i +" "
 
 class Stack:
   def __init__(self):
@@ -105,3 +130,4 @@ def main():
 
 if __name__ == "__main__":
   main()
+  print(postFixEquationResult(nodeValues))
