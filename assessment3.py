@@ -1,9 +1,6 @@
-#Write your program here 👇👇
-
 mathEquation = input("please input your maths equation in the format of (X?Y) and this will convert it to a binary tree :): ")
 mathEquation = mathEquation.replace(' ', '')
 postFix = ' '
-nodeValues = ""
 
 class Node:
   def __init__(self, value = None, left = None, right = None, next = None):
@@ -55,7 +52,6 @@ def associativity(equation):
 def infixOrPostfix(equation):
   result = []
   stack = []
-  global nodeValues
   nodeValues = ' '.join(result)
 
   for i in range(len(mathEquation)):
@@ -81,6 +77,8 @@ def infixOrPostfix(equation):
 
   for i in result:
     nodeValues += i +" "
+  
+  return nodeValues
 
 class Stack:
   def __init__(self):
@@ -112,8 +110,9 @@ class binaryExpressionTree:
 def main():
   stack = Stack()
   tree = binaryExpressionTree()
+  peepee =  infixOrPostfix(mathEquation)
 
-  for c in nodeValues:
+  for c in peepee:
     if c in "+-*/^":
       z = Node(c)
       x = stack.pop()
@@ -124,10 +123,9 @@ def main():
     else:
       stack.push(Node(c))
   print("The Inorder Traversal of Expression Tree: ", end = " ")
-  infixOrPostfix(mathEquation)
-  print(nodeValues)
+  print(peepee)
+  print(postFixEquationResult(peepee))
 
 
 if __name__ == "__main__":
   main()
-  print(postFixEquationResult(nodeValues))
