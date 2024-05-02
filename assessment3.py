@@ -4,10 +4,12 @@ mathEquation = input("please input your maths equation in format of (X?Y) and th
 mathEquation = mathEquation.replace(' ', '')
 postFix = ' '
 #creation of class object
+
+#creation of class object
 class Node:
 #initalisation of class object
   def __init__(self, value = None, left = None, right = None, next = None):
-    self.data = value
+    self.value = value
     self.left = left
     self.right = right
     self.next = next
@@ -55,16 +57,79 @@ def infixOrPostfix(equation):
 
 #creation of postfix order string
   for i in result:
-    nodeValues += i + " "
+    nodeValues += i
 
   return nodeValues
 
-# main function
-def main():
-  #stack = Stack()
-  #tree = binaryExpressionTree()
-  postfixEquation = infixOrPostfix(mathEquation)
+ 
+class Stack:
+    def __init__(self):
+        self.head = None
+ 
+    def push(self, node):
+        if not self.head:
+            self.head = node
+        else:
+            node.next = self.head
+            self.head = node
+ 
+    def pop(self):
+        if self.head:
+            popped = self.head
+            self.head = self.head.next
+            return popped
+        else:
+            raise Exception("Stack is empty")
+    def top(self):
+        return self.head
+ 
+class ExpressionTree:
+    def inorder(self, x):
+        if not x:
+            return
+        self.inorder(x.left)
+        print(x.value, end=" ")
+        self.inorder(x.right)
 
-#conditional validation check for reusability of code
+    def preorder(self, x):
+        if not x:
+            return
+        print(x.value, end=" ")
+        self.preorder(x.left)
+        self.preorder(x.right)
+
+    def postorder(self, x):
+        if not x:
+            return
+        self.postorder(x.left)
+        self.postorder(x.right)
+        print(x.value, end=" ")
+        
+    def breadthFirstTraversal(self, x):
+        if not x:
+            return
+ 
+def main():
+    postfixEquation = infixOrPostfix(mathEquation)
+    stack = Stack()
+    tree = ExpressionTree()
+    for character in postfixEquation:
+        if character in "+-*/^":
+            z = Node(character)
+            x = stack.pop()
+            y = stack.pop()
+            z.left = y
+            z.right = x
+            stack.push(z)
+        else:
+            stack.push(Node(character))
+    print("The Inorder Traversal of Expression Tree: ", end="")
+    tree.inorder(stack.top())
+    print("The Preorder Traversal of Expression Tree: ", end="")
+    tree.preorder(stack.top())
+    print("The Postorder Traversal of Expression Tree: ", end="")
+    tree.postorder(stack.top())
+    
+ 
 if __name__ == "__main__":
-  main()
+    main()
