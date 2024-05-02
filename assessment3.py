@@ -1,10 +1,10 @@
+import unittest
 #user input
 mathEquation = input("please input your maths equation in format of (X?Y) and this will convert it to a binary tree :) : ")
 #reformatting of equation 
 mathEquation = mathEquation.replace(' ', '')
 postFix = ' '
 COUNT = [10]
-#creation of class object
 
 #creation of class object
 class Node:
@@ -14,34 +14,54 @@ class Node:
     self.left = left
     self.right = right
     self.next = next
+  
+def validExpression(expression):
+  operands = 0
+  operators = 0
+  openBrackets = expression.count('(')
+  closedBrackets = expression.count(')')
+  errorMessage = "Not a valid expression,"
+  for thing in expression:
+    if thing == "+" or thing == "-" or thing == "/" or thing == "*":
+      operators += 1
+    elif thing.isdigit() :
+      operands += 1
+  if openBrackets != closedBrackets:
+    errorMessage = errorMessage + " brackets are mismatched,"
+  if operators > (operands/2) or operators < (operands/2):
+    errorMessage = errorMessage + " wrong amount of operands,"
+  if operands % 2 != 0:
+    errorMessage = errorMessage + " missing operator."
+  print(errorMessage)
+  quit()
 
-def print2DUtil(root, space):
+def print2DUtil(x, space):
  
     # Base case
-    if (root == None):
+    if (x == None):
         return
  
     # Increase distance between levels
     space += COUNT[0]
  
     # Process right child first
-    print2DUtil(root.right, space)
+    print2DUtil(x.right, space)
  
     # Print current node after space
     # count
     print()
     for i in range(COUNT[0], space):
         print(end=" ")
-    print(root.value)
+    print(x.value)
  
     # Process left child
-    print2DUtil(root.left, space)
+    print2DUtil(x.left, space)
  
-def print2D(root):
+def print2D(x):
  
     # space=[0]
     # Pass initial space count as 0
-    print2DUtil(root, 0)
+    print2DUtil(x, 0)
 
 #function to determine the precedence of operators
 def operatorOrder(equation):
@@ -112,42 +132,42 @@ class Stack:
         return self.head
  
 class ExpressionTree:
-  def inorder(self, root):
+  def inorder(self, x):
 #Base Case
-    if not root:
+    if not x:
       return
-    self.inorder(root.left)
-    print(root.value, end=" ")
-    self.inorder(root.right)
+    self.inorder(x.left)
+    print(x.value, end=" ")
+    self.inorder(x.right)
     return
 
-  def preorder(self, root):
+  def preorder(self, x):
 #Base Case
-    if not root:
+    if not x:
       return
-    print(root.value, end=" ")
-    self.preorder(root.left)
-    self.preorder(root.right)
+    print(x.value, end=" ")
+    self.preorder(x.left)
+    self.preorder(x.right)
     return
 
-  def postorder(self, root):
+  def postorder(self, x):
 #Base Case
-    if not root:
+    if not x:
       return
-    self.postorder(root.left)
-    self.postorder(root.right)
-    print(root.value, end=" ")
+    self.postorder(x.left)
+    self.postorder(x.right)
+    print(x.value, end=" ")
     return
         
-  def breadthFirstTraversal(self, root):
+  def breadthFirstTraversal(self, x):
 #Base Case
-    if not root:
+    if not x:
       return
     
     treeQueue = []
     breadthFirst = ' '.join(treeQueue)
 
-    treeQueue.append(root)
+    treeQueue.append(x)
     while(len(treeQueue) > 0):
       print(treeQueue[0].value, end =" ")
       node = treeQueue.pop(0)
@@ -158,34 +178,34 @@ class ExpressionTree:
       if node.right is not None:
         treeQueue.append(node.right)
     return breadthFirst
-          
+       
 def main():
-    postfixEquation = infixOrPostfix(mathEquation)
-    stack = Stack()
-    tree = ExpressionTree()
-    for character in postfixEquation:
-        if character in "+-*/^":
-            z = Node(character)
-            print(z.value)
-            root = stack.pop()
-            print(root.value)
-            y = stack.pop()
-            print(y.value)
-            z.left = y
-            z.right = root
-            stack.push(z)
-        else:
-            stack.push(Node(character))
-    print("The Inorder Traversal of Expression Tree: ", end=" ")
-    tree.inorder(stack.top())
-    print("The Preorder Traversal of Expression Tree: ", end=" ")
-    tree.preorder(stack.top())
-    print("The Postorder Traversal of Expression Tree: ", end=" ")
-    tree.postorder(stack.top())
-    print("The Breadth First Traversal of Expression Tree: ", end=" ")
-    tree.breadthFirstTraversal(stack.top())
-    print("A visual representation of the tree :) ", end=" ")
-    print2D(stack.top())
+  validExpression(mathEquation)
+  postfixEquation = infixOrPostfix(mathEquation)
+  stack = Stack()
+  tree = ExpressionTree()
+  for character in postfixEquation:
+    if character in "+-*/^":
+      root = Node(character)
+      print(root.value)
+      x = stack.pop()
+      print(x.value)
+      y = stack.pop()
+      root.left = y
+      root.right = x
+      stack.push(root)
+    else:
+      stack.push(Node(character))
+  print("The Inorder Traversal of Expression Tree: \n", end=" ")
+  tree.inorder(stack.top())
+  print("The Preorder Traversal of Expression Tree: \n", end=" ")
+  tree.preorder(stack.top())
+  print("The Postorder Traversal of Expression Tree: \n", end=" ")
+  tree.postorder(stack.top())
+  print("The Breadth First Traversal of Expression Tree: \n", end=" ")
+  tree.breadthFirstTraversal(stack.top())
+  print("A visual representation of the tree :) \n", end=" ")
+  print2D(stack.top())
     
  
 if __name__ == "__main__":
