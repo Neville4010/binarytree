@@ -64,50 +64,67 @@ def infixOrPostfix(equation):
  
 class Stack:
     def __init__(self):
-        self.head = None
+      self.head = None
  
     def push(self, node):
-        if not self.head:
-            self.head = node
-        else:
-            node.next = self.head
-            self.head = node
+      if not self.head:
+        self.head = node
+      else:
+        node.next = self.head
+        self.head = node
  
     def pop(self):
-        if self.head:
-            popped = self.head
-            self.head = self.head.next
-            return popped
-        else:
-            raise Exception("Stack is empty")
+      if self.head:
+        popped = self.head
+        self.head = self.head.next
+        return popped
+      else:
+        raise Exception("Stack is empty")
+
     def top(self):
         return self.head
  
 class ExpressionTree:
-    def inorder(self, x):
-        if not x:
-            return
-        self.inorder(x.left)
-        print(x.value, end=" ")
-        self.inorder(x.right)
+  def inorder(self, x):
+    if not x:
+      return
+    self.inorder(x.left)
+    print(x.value, end=" ")
+    self.inorder(x.right)
 
-    def preorder(self, x):
-        if not x:
-            return
-        print(x.value, end=" ")
-        self.preorder(x.left)
-        self.preorder(x.right)
+  def preorder(self, x):
+    if not x:
+      return
+    print(x.value, end=" ")
+    self.preorder(x.left)
+    self.preorder(x.right)
 
-    def postorder(self, x):
-        if not x:
-            return
-        self.postorder(x.left)
-        self.postorder(x.right)
-        print(x.value, end=" ")
+  def postorder(self, x):
+    if not x:
+      return
+    self.postorder(x.left)
+    self.postorder(x.right)
+    print(x.value, end=" ")
         
-    def breadthFirstTraversal(self, x):
-        if not x:
-            return
+  def breadthFirstTraversal(self, x):
+    if not x:
+      return
+    
+    treeQueue = []
+    breadthFirst = ' '.join(treeQueue)
+
+    treeQueue.append(x)
+    while(len(treeQueue) > 0):
+      print(treeQueue[0].value, end =" ")
+      node = treeQueue.pop(0)
+      
+      if node.left is not None:
+        treeQueue.append(node.left)
+      
+      if node.right is not None:
+        treeQueue.append(node.right)
+    return breadthFirst
+          
  
 def main():
     postfixEquation = infixOrPostfix(mathEquation)
@@ -123,12 +140,15 @@ def main():
             stack.push(z)
         else:
             stack.push(Node(character))
-    print("The Inorder Traversal of Expression Tree: ", end="")
+    print("The Inorder Traversal of Expression Tree: ", end=" ")
     tree.inorder(stack.top())
-    print("The Preorder Traversal of Expression Tree: ", end="")
+    print("The Preorder Traversal of Expression Tree: ", end=" ")
     tree.preorder(stack.top())
-    print("The Postorder Traversal of Expression Tree: ", end="")
+    print("The Postorder Traversal of Expression Tree: ", end=" ")
     tree.postorder(stack.top())
+    print("The Breadth First Traversal of Expression Tree: ", end=" ")
+    tree.breadthFirstTraversal(stack.top())
+    print("A visual representation of the tree :) ", end=" ")
     
  
 if __name__ == "__main__":
