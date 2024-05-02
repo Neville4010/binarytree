@@ -3,6 +3,7 @@ mathEquation = input("please input your maths equation in format of (X?Y) and th
 #reformatting of equation 
 mathEquation = mathEquation.replace(' ', '')
 postFix = ' '
+COUNT = [10]
 #creation of class object
 
 #creation of class object
@@ -13,6 +14,34 @@ class Node:
     self.left = left
     self.right = right
     self.next = next
+
+def print2DUtil(root, space):
+ 
+    # Base case
+    if (root == None):
+        return
+ 
+    # Increase distance between levels
+    space += COUNT[0]
+ 
+    # Process right child first
+    print2DUtil(root.right, space)
+ 
+    # Print current node after space
+    # count
+    print()
+    for i in range(COUNT[0], space):
+        print(end=" ")
+    print(root.value)
+ 
+    # Process left child
+    print2DUtil(root.left, space)
+ 
+def print2D(root):
+ 
+    # space=[0]
+    # Pass initial space count as 0
+    print2DUtil(root, 0)
 
 #function to determine the precedence of operators
 def operatorOrder(equation):
@@ -46,7 +75,7 @@ def infixOrPostfix(equation):
      postfixStack.pop()
     else:
 #sorts the order of which operators and operands are displayed in result
-      while postfixStack and (operatorOrder(mathEquation[i]) < operatorOrder(postfixStack[-1]) or (operatorOrder(mathEquation[i]) == operatorOrder(postfixStack[-1]))):
+      while postfixStack and (operatorOrder(mathEquation[i]) <= operatorOrder(postfixStack[-1])):
         result.append(postfixStack.pop())
       postfixStack.append(equation)
 
@@ -54,10 +83,8 @@ def infixOrPostfix(equation):
    result.append(postfixStack.pop())
 
   print(''.join(result))
-
+  nodeValues = ''.join(result)
 #creation of postfix order string
-  for i in result:
-    nodeValues += i
 
   return nodeValues
 
@@ -85,35 +112,42 @@ class Stack:
         return self.head
  
 class ExpressionTree:
-  def inorder(self, x):
-    if not x:
+  def inorder(self, root):
+#Base Case
+    if not root:
       return
-    self.inorder(x.left)
-    print(x.value, end=" ")
-    self.inorder(x.right)
+    self.inorder(root.left)
+    print(root.value, end=" ")
+    self.inorder(root.right)
+    return
 
-  def preorder(self, x):
-    if not x:
+  def preorder(self, root):
+#Base Case
+    if not root:
       return
-    print(x.value, end=" ")
-    self.preorder(x.left)
-    self.preorder(x.right)
+    print(root.value, end=" ")
+    self.preorder(root.left)
+    self.preorder(root.right)
+    return
 
-  def postorder(self, x):
-    if not x:
+  def postorder(self, root):
+#Base Case
+    if not root:
       return
-    self.postorder(x.left)
-    self.postorder(x.right)
-    print(x.value, end=" ")
+    self.postorder(root.left)
+    self.postorder(root.right)
+    print(root.value, end=" ")
+    return
         
-  def breadthFirstTraversal(self, x):
-    if not x:
+  def breadthFirstTraversal(self, root):
+#Base Case
+    if not root:
       return
     
     treeQueue = []
     breadthFirst = ' '.join(treeQueue)
 
-    treeQueue.append(x)
+    treeQueue.append(root)
     while(len(treeQueue) > 0):
       print(treeQueue[0].value, end =" ")
       node = treeQueue.pop(0)
@@ -125,7 +159,6 @@ class ExpressionTree:
         treeQueue.append(node.right)
     return breadthFirst
           
- 
 def main():
     postfixEquation = infixOrPostfix(mathEquation)
     stack = Stack()
@@ -133,10 +166,13 @@ def main():
     for character in postfixEquation:
         if character in "+-*/^":
             z = Node(character)
-            x = stack.pop()
+            print(z.value)
+            root = stack.pop()
+            print(root.value)
             y = stack.pop()
+            print(y.value)
             z.left = y
-            z.right = x
+            z.right = root
             stack.push(z)
         else:
             stack.push(Node(character))
@@ -149,7 +185,8 @@ def main():
     print("The Breadth First Traversal of Expression Tree: ", end=" ")
     tree.breadthFirstTraversal(stack.top())
     print("A visual representation of the tree :) ", end=" ")
+    print2D(stack.top())
     
  
 if __name__ == "__main__":
-    main()
+  main()
