@@ -1,131 +1,70 @@
-mathEquation = input("please input your maths equation in the format of (X?Y) and this will convert it to a binary tree :): ")
+#user input
+mathEquation = input("please input your maths equation in format of (X?Y) and this will convert it to a binary tree :) : ")
+#reformatting of equation 
 mathEquation = mathEquation.replace(' ', '')
 postFix = ' '
-
+#creation of class object
 class Node:
+#initalisation of class object
   def __init__(self, value = None, left = None, right = None, next = None):
     self.data = value
     self.left = left
     self.right = right
     self.next = next
-  
-def postFixEquationResult(nodeValues):
-  operandStack = []
-  componentList = nodeValues.split()
 
-  for component in componentList:
-    if component in "0123456789":
-      operandStack.append(int(component))
-    else:
-      secondOperand = operandStack.pop()
-      firstOperand = operandStack.pop()
-      finalAnswer = Calculate(component, firstOperand, secondOperand)
-      operandStack.append(finalAnswer)
-  return operandStack.pop()
-
-def Calculate(operand, leftValue, rightValue):
-  if operand == '+':
-    return leftValue + rightValue
-  elif operand == '-':
-    return leftValue - rightValue
-  elif operand == '*':
-    return leftValue * rightValue
-  elif operand == '/':
-    return leftValue / rightValue
-
-
-def prec(equation):
-  if equation == '^':
-    return 3
-  elif equation == '/' or equation == '*':
+#function to determine the precedence of operators
+def operatorOrder(equation):
+  if equation == '/' or equation == '*':
     return 2
   elif equation == '+' or equation == '-':
     return 1
   else:
     return -1
 
-def associativity(equation):
-  if equation == '^':
-    return 'Right'
-  return 'Left'
-
+#function to convert user's infix input to a postfix output via use of stacks
 def infixOrPostfix(equation):
   result = []
-  stack = []
+  postfixStack = []
+#initialisation of postfix string output
   nodeValues = ' '.join(result)
 
+# iteration through user input
   for i in range(len(mathEquation)):
     equation = mathEquation[i]
 
-    if ('a' <= equation <= 'z') or ('A' <= equation <= 'Z') or ('0' <= equation <= '9'):
+#conditional statement checking whether or not value is a digit 0-9
+    if equation.isdigit():
       result.append(equation)
     elif equation == '(':
-      stack.append(equation)
+     postfixStack.append(equation)
     elif equation == ')':
-      while stack and stack[-1] != '(':
-        result.append(stack.pop())
-      stack.pop()
+#removes brackets from the stack and result
+     while postfixStack and postfixStack[-1] != '(':
+      result.append(postfixStack.pop())
+     postfixStack.pop()
     else:
-      while stack and (prec(mathEquation[i]) < prec(stack[-1]) or (prec(mathEquation[i]) == prec(stack[-1]) and associativity(mathEquation[i]) == 'Left')):
-        result.append(stack.pop())
-      stack.append(equation)
-  
-  while stack:
-    result.append(stack.pop())
-  
+#sorts the order of which operators and operands are displayed in result
+      while postfixStack and (operatorOrder(mathEquation[i]) < operatorOrder(postfixStack[-1]) or (operatorOrder(mathEquation[i]) == operatorOrder(postfixStack[-1]))):
+        result.append(postfixStack.pop())
+      postfixStack.append(equation)
+
+  while postfixStack:
+   result.append(postfixStack.pop())
+
   print(''.join(result))
 
+#creation of postfix order string
   for i in result:
-    nodeValues += i +" "
-  
+    nodeValues += i + " "
+
   return nodeValues
 
-class Stack:
-  def __init__(self):
-    self.head = None
-  
-  def push(self, node):
-    if not self.head:
-      self.head = node
-    else:
-      node.next = self.head
-      self.head = node
-  
-  def pop(self):
-    if self.head:
-      popped = self.head
-      self.head = self.head.next
-      return popped
-    else:
-      raise Exception("Stack is empty")
-
-class binaryExpressionTree:
-  def inorder(self, x):
-    if not x:
-      return
-    self.inorder(x.left)
-    print(x.value, end = " ")
-    self.inorder(x.right)
-
+# main function
 def main():
-  stack = Stack()
-  tree = binaryExpressionTree()
-  peepee =  infixOrPostfix(mathEquation)
+  #stack = Stack()
+  #tree = binaryExpressionTree()
+  postfixEquation = infixOrPostfix(mathEquation)
 
-  for c in peepee:
-    if c in "+-*/^":
-      z = Node(c)
-      x = stack.pop()
-      y = stack.pop()
-      z.left = y
-      z.right = x
-      stack.push(z)
-    else:
-      stack.push(Node(c))
-  print("The Inorder Traversal of Expression Tree: ", end = " ")
-  print(peepee)
-  print(postFixEquationResult(peepee))
-
-
+#conditional validation check for reusability of code
 if __name__ == "__main__":
   main()
